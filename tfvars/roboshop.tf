@@ -2,7 +2,10 @@ resource "aws_instance" "web" {
 #   count = 11
   count = length(var.instance_names)
   ami           = data.aws_ami.centos.id
-  instance_type = var.instance_names[count.index] == "mongodb" || var.instance_names[count.index] == "mysql" || var.instance_names[count.index] == "shipping" ? "t3.small" : "t2.micro"
+  instance_type = startswith(var.instance_names[count.index], "mongodb") || startswith(var.instance_names[count.index], "mysql") || startswith(var.instance_names[count.index], "shipping") ? "t3.small" : "t2.micro"
+
+  #  If we use below type, it should considers only excatly match of instance name mentioned.
+  # instance_type = var.instance_names[count.index] == "mongodb" || var.instance_names[count.index] == "mysql" || var.instance_names[count.index] == "shipping" ? "t3.small" : "t2.micro"
 
   tags = {
     Name = var.instance_names[count.index]
